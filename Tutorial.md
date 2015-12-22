@@ -11,9 +11,9 @@ Username: maptime
 Password: mapsRfun504
 ````
 
-### Connection Instructions
+### pgAdmin Overview
 
-If you are unfamilar with pgAdmin, this section will detail how to connect to databases with it, feel free to skip this section if you are familar with pgAdmin.
+If you are unfamilar with pgAdmin, this section will detail how to connect to databases with it, feel free to skip this section if you are already familar with pgAdmin.
 
 Launch pgAdmin and you'll see something like this (Note: I have already added some servers, you won't see these when starting up the application)
 
@@ -71,26 +71,23 @@ Again we'll look at geo.states\_ne, but we only want to know a state's name and 
 [Problem 0b Solution](https://gist.github.com/parkercoleman/163e60eddbccad9def51)
 
 #### Problem 0c: Select all states in the United States
-Finally, lets use the WHERE clause.  Once again we're interested in the geo.states\_ne table, and just to limit the amount of data coming back, lets only select the name column.  But how do we limit the rows returned to only states that are in the United States?  
+Once again we're interested in the geo.states\_ne table, and just to limit the amount of data coming back, lets only select the name column.  But how do we limit the rows returned to only states that are in the United States?  
 
-We'll need to use the WHERE clause, and limit values in the 'admin' column to the United States (hint: to limit our results, we'll need to spell out 'United States' exactly as it appears in the states\_ne table, which is 'United States of America')
+We'll need to know a bit more about the table we're working with.  The states\_ne table has information about states all over the world, not just states in America.  The country each state is part of is in the 'admin' column.  We'll need to use the WHERE clause, and limit values in the 'admin' column to the United States (hint: to limit our results, we'll need to spell out 'United States' exactly as it appears in the states\_ne table, which is 'United States of America')
 
 [Problem 0c Solution](https://gist.github.com/parkercoleman/12abca972317654c5f13)
 
 ### Problem 1: What is the area of the state of Washington?  How does it compare to the areas of other states?
 
-For this we'll need to use the geo.states\_ne table, which has information about every state on earth.  
-
-In fact, it has information on more states than we need (we're only interested in American states) so that will need to be part of our query.  A big part of writing SQL queries is understanding the pecularities of the data you're working with, in this table, the name of the country is confusingly stored in a column called "admin"
+For this we'll need to use the geo.states\_ne table, which has information about every state on earth.  We'll need to limit the states returned to only those that are part of the 'United States of America' (hint: this value is in the 'admin' column of the states table)
 
 Once we have limited the number of states being returned, we'll need to calculate their area.  PostGIS provides a function out of the box to accomplish this, [ST_Area](http://postgis.net/docs/ST_Area.html) (hint: check out the "use_spheriod" optional argument!)
 
 [Problem 1 Solution](https://gist.github.com/parkercoleman/165acf36b312e994da96)
 
-
 ### Problem 2: Which airport is closest to Seattle?
 
-For this question we'll need data from two tables: geo.cities\_ne and transport.airports\_ne.  
+For this question we'll need data from two tables: geo.cities\_ne and transport.airports\_ne.
 
 Intuitively, we'll want to check every airport's distance against the distance of Seattle.  We can do this via a CROSS JOIN, remember to also limit our city results to only "Seattle" in the WHERE clause.
 
